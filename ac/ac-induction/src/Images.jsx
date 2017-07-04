@@ -1,18 +1,19 @@
 // @flow
 
 import React from "react";
-//import { View, Image } from "react-native";
 
-const Images = () => <p> Hello World </p>; // if (srcURITrue === 'empty' || srcURIFalse === 'empty') {
-//  return <div> Chargement des images impossible </div>;
-// } else {
-
-/*<View>
-    <Image src={"./logo.png"} />
-    <Image src={"./logoBis.png"} />
-  </View>;
-
-// }*/
+const Images = props => {
+  if (!props.imgTrue || !props.imgFalse) {
+    return <div>{"Images's URI not found"}</div>;
+  } else {
+    return (
+      <div>
+        <img src={props.imgTrue} alt={""} height={"100"} />
+        <br />
+        <img src={props.imgFalse} alt={""} height={"100"} />
+      </div>
+    );
+  }
+};
 
 export default Images;
-//style={{ width: 50, height: 50 }}

@@ -11,18 +11,19 @@ $YARN install
 # install package frog-utils
 cd $FROG/frog-utils
 ln -s $FROG/.babelrc . 2>/dev/null
-$YARN install
+$YARN install & 
 
 # install activities and operators packages
 for dir in $FROG/ac/ac-*/ $FROG/op/op-*/
 do
     cd $dir
     ln -s $FROG/.babelrc . 2>/dev/null
-    $YARN install
+    $YARN install &
 done
 
 # links all packages to the frog/ meteor project
 cd $FROG/frog
 ln -s $FROG/.babelrc . 2>/dev/null
+ln -s $FROG/node_modules . 2>/dev/null
 
 exit 0

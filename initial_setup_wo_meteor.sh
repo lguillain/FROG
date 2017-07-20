@@ -26,4 +26,5 @@ cd $FROG/frog
 ln -s $FROG/.babelrc . 2>/dev/null
 ln -s $FROG/node_modules . 2>/dev/null
 
+wait
 exit 0

@@ -1,6 +1,7 @@
 {
   "name": "frog-package",
   "version": "1.0.0",
+  "private": true,
   "scripts": {
     "start": "nps",
     "test": "nps test"
@@ -40,5 +41,11 @@
     "enzyme": "^2.9.1",
     "json-stringify-pretty-compact": "^1.0.4",
     "react-test-renderer": "^15.6.1"
-  }
+  },
+  "workspaces": [
+    "ac/*",
+    "op/*",
+    "frog",
+    "frog-utils"
+  ]
 }

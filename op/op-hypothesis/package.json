@@ -16,4 +16,8 @@
     "query-string": "^4.3.4",
     "strict-uri-encode": "^2.0.0"
   }
+,
+  "devDependencies": {
+    "flow-copy-source": "^1.2.0"
+  }
 }

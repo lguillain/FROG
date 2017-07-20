@@ -16,4 +16,8 @@
     "react-dom": "^15.6.1",
     "react-player": "^0.19.1"
   }
+,
+  "devDependencies": {
+    "flow-copy-source": "^1.2.0"
+  }
 }

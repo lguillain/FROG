@@ -12,4 +12,8 @@
     "react": "^15.5.4",
     "styled-components": "^2.1.1"
   }
+,
+  "devDependencies": {
+    "flow-copy-source": "^1.2.0"
+  }
 }

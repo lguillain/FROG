@@ -15,4 +15,8 @@
     "react-dom": "^15.6.1",
     "react-iframe": "^1.0.7"
   }
+,
+  "devDependencies": {
+    "flow-copy-source": "^1.2.0"
+  }
 }

@@ -10,8 +10,6 @@ $YARN install
 
 # install package frog-utils
 cd $FROG/frog-utils
-mkdir -p node_modules
-ln -s $FROG/node_modules/* node_modules/ 2>/dev/null
 ln -s $FROG/.babelrc . 2>/dev/null
 $YARN install
 
@@ -19,18 +17,12 @@ $YARN install
 for dir in $FROG/ac/ac-*/ $FROG/op/op-*/
 do
     cd $dir
-    mkdir -p node_modules
-    ln -s $FROG/node_modules/* node_modules/ 2>/dev/null
-    ln -s $FROG/frog-utils node_modules/ 2>/dev/null
     ln -s $FROG/.babelrc . 2>/dev/null
     $YARN install
-    npm run build &
 done
 
 # links all packages to the frog/ meteor project
 cd $FROG/frog
-mkdir -p node_modules
-ln -s $FROG/node_modules/* node_modules/ 2>/dev/null
 ln -s $FROG/.babelrc . 2>/dev/null
 
 exit 0

@@ -10,6 +10,7 @@ fs.readdir('./ac', (_, ac) => {
     const template = `FROM node:7.8.0
 RUN apt-get update && apt-get install -y ocaml libelf-dev
 RUN curl -sL https://install.meteor.com | sed s/--progress-bar/-sL/g | /bin/sh
+RUN npm install -g npm@next
 
 RUN mkdir -p /usr/src/frog/frog && chmod a+rwx -R /usr/src/frog
 WORKDIR /usr/src/frog

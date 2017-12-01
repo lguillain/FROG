@@ -1,7 +1,8 @@
 // @flow
 
-import React from 'react';
+import React, { Component } from 'react';
 import Latex from 'react-latex';
+import MorseNode from './morse.js'
 
 export default (props: Object) => {
   const { options, value, required, disabled, readonly, onChange } = props;
@@ -23,7 +24,8 @@ export default (props: Object) => {
               disabled={disabled || readonly}
               onChange={() => onChange(option.value)}
             />
-            <Latex>{option.label}</Latex>
+            <Sound answer={option.label}/>
+            {/* <Latex>{option.label}</Latex> */}
           </span>
         );
 
@@ -40,3 +42,33 @@ export default (props: Object) => {
     </div>
   );
 };
+
+
+class Sound extends Component{
+  constructor(props){
+    super(props);
+    this.playAudio=this.playAudio.bind(this);
+    this.initAudio=this.initAudio.bind(this);
+  }
+
+  initAudio() {
+    this.context = new window.AudioContext()
+    this.m = new MorseNode(this.context, 2)
+    console.log(this.context.destination)
+    this.m.connect(this.context.destination)
+  }
+
+
+  playAudio(c) {
+    this.initAudio()
+    console.log(this.props)
+    this.m.playString(this.context.currentTime,c)
+    setTimeout(x => this.context.close(), 20000)
+  }
+
+  render(){
+    return(
+      <p onClick={x => this.playAudio(this.props.answer)}>🔊</p>
+    );
+  }
+}

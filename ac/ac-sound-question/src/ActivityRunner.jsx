@@ -1,10 +1,11 @@
 // @flow
 
-import React from 'react';
+import React, {Component} from 'react';
 import Form from 'react-jsonschema-form';
 import styled from 'styled-components';
 import Latex from 'react-latex';
 import type { ActivityRunnerT } from 'frog-utils';
+import MorseNode from './morse.js'
 
 import LatexWidget from './LatexWidget';
 
@@ -31,11 +32,51 @@ const QuestionTitle = styled.div`
   padding-top: 10px;
 `;
 
-const DescriptionField = props => (
+const DescriptionField = props => {
+  let split = extractSound(props.description);
+  return(
   <QuestionTitle>
-    <Latex>{props.description}</Latex>
+    <Latex>{split[0]}</Latex>
+    <Sound sound={split[1]}/>
   </QuestionTitle>
-);
+  );
+}
+
+function extractSound(question){
+  let q = question.substr(0, question.indexOf('?')+1); 
+  let a = question.substr(question.indexOf('?')+1);
+  return [q, a]
+}
+
+
+class Sound extends Component{
+  constructor(props){
+    super(props);
+    this.playAudio=this.playAudio.bind(this);
+    this.initAudio=this.initAudio.bind(this);
+  }
+
+  initAudio() {
+    this.context = new window.AudioContext()
+    this.m = new MorseNode(this.context, 2)
+    console.log(this.context.destination)
+    this.m.connect(this.context.destination)
+  }
+
+
+  playAudio(c) {
+    this.initAudio()
+    console.log(this.props)
+    this.m.playString(this.context.currentTime,c)
+    setTimeout(x => this.context.close(), 20000)
+  }
+
+  render(){
+    return(
+      <p onClick={x => this.playAudio(this.props.sound)}>🔊</p>
+    );
+  }
+}
 
 const Quiz = ({ activityData, data, dataFn, logger }: ActivityRunnerT) => {
   const schema = {

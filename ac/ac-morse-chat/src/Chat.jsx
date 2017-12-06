@@ -8,8 +8,7 @@ import TextInput from './TextInput';
 
 const Chatmsg = ({ msg }) => (
   <li>
-    <p onClick={x => alert('works!')}>{msg.user}: 🔊</p>
-    {/* {msg.msg} */}
+    <p>{msg.user}: {msg.msg}</p>
   </li>
 );
 

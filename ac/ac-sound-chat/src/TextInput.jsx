@@ -24,7 +24,6 @@ class TextInput extends Component {
   initAudio() {
     this.context = new window.AudioContext()
     this.m = new MorseNode(this.context, 2)
-    console.log(this.context.destination)
     this.m.connect(this.context.destination)
   }
 
@@ -37,7 +36,6 @@ class TextInput extends Component {
   create(){
     this.baseChar = '.'
     setTimeout( x => {this.baseChar = '-'}, 500)
-    console.log(this)
   };
   
   update(){
@@ -56,7 +54,6 @@ class TextInput extends Component {
   };
 
   startAudio(){
-    console.log(this)
     this.m.playSound(this.context.currentTime)
     this.create()
   }
@@ -68,7 +65,6 @@ class TextInput extends Component {
   }
 
   onKeyPress = (e: Object) => {
-    console.log('was engaged')
     if (e.key === 'Enter') {
       this.props.callbackFn(e.target.value);
       this.setState({ value: '' , char: this.state.char});
@@ -78,7 +74,6 @@ class TextInput extends Component {
 
 
   handleChange = (e: { target: { value: string } }) => {
-    console.log(this.state)
     this.setState({ value: e.target.value });
   };
 

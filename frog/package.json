@@ -86,6 +86,10 @@
     "ws": "^3.2.0",
     "op-check-concepts": "1.0.0",
     "ac-textarea": "1.0.0",
-    "op-performance-select": "1.0.0"
+    "op-performance-select": "1.0.0",
+    "ac-morse-chat": "1.0.0",
+    "ac-sound-answer": "1.0.0",
+    "ac-sound-chat": "1.0.0",
+    "ac-sound-question": "1.0.0"
   }
 }

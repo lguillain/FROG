@@ -1,9 +1,13 @@
 // @flow
 
+<<<<<<< HEAD
 import acSoundChat from 'ac-sound-chat';
 import acSoundQuestion from 'ac-sound-question';
 import acSoundAnswer from 'ac-sound-answer';
 import acMorseChat from 'ac-morse-chat';
+=======
+import acTextarea from 'ac-textarea';
+>>>>>>> chili-epfl/develop
 import acAutocode from 'ac-autocode';
 import acDisplaySocial from 'ac-display-social';
 import acUploader from 'ac-uploader';
@@ -26,10 +30,14 @@ import { type ActivityPackageT, flattenOne } from 'frog-utils';
 import { keyBy } from 'lodash';
 
 export const activityTypes: ActivityPackageT[] = flattenOne([
+<<<<<<< HEAD
   acSoundChat,
   acSoundQuestion,
   acSoundAnswer,
   acMorseChat,
+=======
+  acTextarea,
+>>>>>>> chili-epfl/develop
   acAutocode,
   acDisplaySocial,
   acUploader,

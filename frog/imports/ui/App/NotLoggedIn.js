@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { A } from 'frog-utils';
 import { sample } from 'lodash';
 import FlexView from 'react-flexview';
 
@@ -20,7 +20,7 @@ const randomName = () =>
     'Rudolf'
   ]);
 
-const NotLoggedIn = () => {
+const NotLoggedIn = ({ login }: { login: Function }) => {
   if (process.env.NODE_ENV !== 'production') {
     const name = randomName();
     return (
@@ -56,17 +56,19 @@ const NotLoggedIn = () => {
               (unless you use different browsers, privacy-mode etc). A quick
               work-around is to define in /etc/hosts:
             </p>
-            <pre>{`127.0.0.1	localhost
-127.0.0.1	dev1
-127.0.0.1	dev2
-127.0.0.1	dev3
-127.0.0.1	dev4`}</pre>
+            <p>
+              127.0.0.1 localhost<br />
+              127.0.0.1 dev1<br />
+              127.0.0.1 dev2<br />
+              127.0.0.1 dev3<br />
+              127.0.0.1 dev4
+            </p>
             <p>
               That way, you can log in to{' '}
               <b>
                 <i>http://localhost:3000</i>
               </b>{' '}
-              as teacher, and <h3>Shortcuts</h3>
+              as teacher, and{' '}
               <b>
                 <i>http://dev1:3000</i>{' '}
               </b>{' '}
@@ -85,10 +87,10 @@ const NotLoggedIn = () => {
               <h3>Shortcuts</h3>
               <ul>
                 <li>
-                  <Link to="?login=teacher">Log in as teacher</Link>
+                  <A onClick={() => login('teacher')}>Log in as teacher</A>
                 </li>
                 <li>
-                  <Link to={`?login=${name}`}>Log in as {name} (student)</Link>
+                  <A onClick={() => login(name)}>Log in as {name} (student)</A>
                 </li>
               </ul>
             </div>

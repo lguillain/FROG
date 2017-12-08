@@ -1,12 +1,13 @@
 // @flow
 
 import React from 'react';
-import { ChangeableText } from 'frog-utils';
-import { activityTypesObj } from '/imports/activityTypes';
-import { addActivity, setStreamTarget } from '/imports/api/activities';
 import FlexView from 'react-flexview';
 import { FormGroup, FormControl, Button } from 'react-bootstrap';
+import { withState } from 'recompose';
+import { ChangeableText, A } from 'frog-utils';
 
+import { activityTypesObj } from '/imports/activityTypes';
+import { addActivity, setStreamTarget } from '/imports/api/activities';
 import { connect } from '../../store';
 import { ErrorList, ValidButton } from '../../Validator';
 import { RenameField } from '../../Rename';
@@ -19,20 +20,23 @@ const StreamSelect = ({ activity, targets, onChange }) => (
     <FormControl
       onChange={e => onChange(e.target.value)}
       componentClass="select"
-      value={activity.streamTarget}
+      value={activity.streamTarget || 'undefined'}
     >
       {[{ id: 'undefined', title: 'Choose a target' }, ...targets].map(x => (
         <option value={x.id} key={x.id}>
-          {' '}
-          {x.title}{' '}
+          {x.title}
         </option>
       ))}
     </FormControl>
   </FormGroup>
 );
 
-const EditActivity = props => {
-  const activity = props.activity;
+const RawEditActivity = ({
+  advancedOpen,
+  setAdvancedOpen,
+  activity,
+  ...props
+}) => {
   const graphActivity = props.store.activityStore.all.find(
     act => act.id === activity._id
   );
@@ -80,7 +84,8 @@ const EditActivity = props => {
                 activityId={activity._id}
                 value={graphActivity.title}
                 onChange={grp =>
-                  addActivity(activity.activityType, null, activity._id, grp)}
+                  addActivity(activity.activityType, null, activity._id, grp)
+                }
               />
             </h3>
           </div>
@@ -99,7 +104,8 @@ const EditActivity = props => {
                   props.store.ui.setShowPreview({
                     activityTypeId: activity.activityType,
                     config: activity.data
-                  })}
+                  })
+                }
               />
             )}
 
@@ -111,7 +117,9 @@ const EditActivity = props => {
             {`Type: ${activityType.meta.name}
                      (${activity.activityType})`}
             <br />
-            {`Starting after ${graphActivity.startTime} min., running for ${graphActivity.length} min.`}
+            {`Starting after ${graphActivity.startTime} min., running for ${
+              graphActivity.length
+            } min.`}
           </i>
         </font>
         {activity.plane === 2 && (
@@ -123,11 +131,6 @@ const EditActivity = props => {
             }}
           />
         )}
-        <StreamSelect
-          activity={activity}
-          targets={props.store.activityStore.all.filter(a => a.plane === 3)}
-          onChange={streamTarget => setStreamTarget(activity._id, streamTarget)}
-        />
       </div>
       <ConfigForm
         {...{
@@ -137,9 +140,29 @@ const EditActivity = props => {
           refreshValidate: props.store.refreshValidate
         }}
       />
-      <FileForm />
+      <A onClick={() => setAdvancedOpen(!advancedOpen)}>Advanced...</A>
+      {advancedOpen && (
+        <React.Fragment>
+          <div>
+            Select streaming target
+            <StreamSelect
+              activity={activity}
+              targets={props.store.activityStore.all.filter(
+                a => a.plane === 3 && a.id !== activity._id
+              )}
+              onChange={streamTarget =>
+                setStreamTarget(activity._id, streamTarget)
+              }
+            />
+          </div>
+          <FileForm />
+        </React.Fragment>
+      )}
     </div>
   );
 };
 
+const EditActivity = withState('advancedOpen', 'setAdvancedOpen', false)(
+  RawEditActivity
+);
 export default connect(EditActivity);

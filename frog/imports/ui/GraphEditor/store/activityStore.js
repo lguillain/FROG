@@ -1,8 +1,9 @@
 // @flow
 import { computed, action, observable } from 'mobx';
-import { omit } from 'lodash';
+import { omit, maxBy } from 'lodash';
 
 import Activity from './activity';
+import { duplicateActivity } from '../../../api/activities';
 import { store } from './index';
 import getOffsets from '../utils/getOffsets';
 import { between } from '../utils';
@@ -46,6 +47,13 @@ export default class ActivityStore {
 
   @observable all: any = [];
 
+  @observable activitySequence: any;
+
+  @action
+  setActivitySequence(act: any) {
+    this.activitySequence = act;
+  }
+
   @computed
   get activityOffsets(): any {
     return [1, 2, 3].reduce(
@@ -53,6 +61,14 @@ export default class ActivityStore {
       {}
     );
   }
+
+  @action
+  duplicateActivity = () => {
+    if (store.ui.selected instanceof Activity) {
+      const x = duplicateActivity(store.ui.selected.id);
+      this.mongoAdd(x);
+    }
+  };
 
   @action
   addActivity = (plane: number, rawX: number): void => {
@@ -183,5 +199,11 @@ export default class ActivityStore {
   @computed
   get history(): Array<any> {
     return this.all.map(x => ({ ...omit(x, 'over') }));
+  }
+
+  @computed
+  get furthestActivity(): number {
+    const max = maxBy(this.all, x => x.startTime + x.length);
+    return max && Math.ceil(max.startTime + max.length);
   }
 }

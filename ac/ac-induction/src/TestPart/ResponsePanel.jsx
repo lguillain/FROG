@@ -1,126 +1,92 @@
 // @flow
 
 import React from 'react';
+import { Collapse } from 'react-bootstrap';
+
 import { stringToArray } from '../ArrayFun';
+import { TestListDiv } from '../StyledComponents';
+import Switch from './Switch';
 
-export default (props: Object) => (
-  <div style={{ width: '100%', height: '80%' }}>
-    {props.data.testChoice ? (
-      <TruePanel {...props} />
-    ) : (
-      <FalsePanel {...props} />
-    )}
-  </div>
-);
+export default (props: Object) => {
+  const choice = props.tmpList[props.data.indexCurrent].selectedChoice;
 
-const TruePanel = ({
+  return (
+    <div style={{ width: '100%', height: '80%' }}>
+      <h3>This example is a {props.title}</h3>
+      <Switch {...props} />
+      {props.feedback && <Panel {...{ ...props, choice, show: true }} />}
+      {props.feedback && <Panel {...{ ...props, choice, show: false }} />}
+    </div>
+  );
+};
+
+const Panel = ({
   title,
   properties,
   feedback,
   tmpList,
   examples,
   dataFn,
-  data
-}: Object) => (
-  <div style={{ width: '100%', height: '100%' }}>
-    <h4>
-      {"Select properties that makes him an example of the concept '" +
+  data,
+  choice,
+  show
+}: Object) => {
+  const even = tmpList[data.indexCurrent].realIndex % 2 === 0;
+  const titleBis = choice
+    ? 'Select all the properties that make it an example of ' + title
+    : even
+      ? "Select one property that excludes it from being a '" + title + "'"
+      : "Select properties that are missing to be a correct example of '" +
         title +
-        "'"}
-    </h4>
-    <div
-      style={{
-        width: '100%',
-        height: 'fit-content',
-        textAlign: 'left',
-        paddingLeft: '100px'
-      }}
-    >
-      {stringToArray(
-        examples[tmpList[data.indexCurrent].realIndex].respectedProperties
-      ).map(x => (
-        <div className="checkbox" key={x}>
-          <input
-            type="checkbox"
-            checked={
-              !!tmpList[data.indexCurrent].selectedProperties.includes(x)
-            }
-            onClick={() => {
-              if (tmpList[data.indexCurrent].selectedProperties.includes(x))
-                tmpList[data.indexCurrent].selectedProperties = tmpList[
-                  data.indexCurrent
-                ].selectedProperties.filter(y => y !== x);
-              else
-                tmpList[data.indexCurrent].selectedProperties = [
-                  ...tmpList[data.indexCurrent].selectedProperties,
-                  x
-                ];
-              dataFn.objInsert(
-                tmpList,
-                feedback ? 'listIndexTestWithFeedback' : 'listIndexTest'
-              );
-            }}
-          />
-          {properties[x]}
-        </div>
-      ))}
-    </div>
-  </div>
-);
-
-const FalsePanel = ({
-  title,
-  properties,
-  feedback,
-  tmpList,
-  examples,
-  dataFn,
-  data
-}: Object) => (
-  <div style={{ width: '100%', height: '100%' }}>
-    <h4>
-      {(tmpList[data.indexCurrent].realIndex % 2 === 0
-        ? "Select properties that exclude him of being an example of the concept '"
-        : "Select what would be missing to be an example of the concept '") +
-        title +
-        "'"}
-    </h4>
-    <div
-      style={{
-        width: '100%',
-        height: 'fit-content',
-        textAlign: 'left',
-        paddingLeft: '100px'
-      }}
-    >
-      {stringToArray(
-        examples[tmpList[data.indexCurrent].realIndex].respectedProperties
-      ).map(x => (
-        <div className="checkbox" key={x}>
-          <input
-            type="checkbox"
-            checked={
-              !!tmpList[data.indexCurrent].selectedProperties.includes(x)
-            }
-            onClick={() => {
-              if (tmpList[data.indexCurrent].selectedProperties.includes(x))
-                tmpList[data.indexCurrent].selectedProperties = tmpList[
-                  data.indexCurrent
-                ].selectedProperties.filter(y => y !== x);
-              else
-                tmpList[data.indexCurrent].selectedProperties = [
-                  ...tmpList[data.indexCurrent].selectedProperties,
-                  x
-                ];
-              dataFn.objInsert(
-                tmpList,
-                feedback ? 'listIndexTestWithFeedback' : 'listIndexTest'
-              );
-            }}
-          />
-          {properties[x]}
-        </div>
-      ))}
-    </div>
-  </div>
-);
+        "'";
+  const array =
+    choice || even
+      ? stringToArray(
+          examples[tmpList[data.indexCurrent].realIndex].respectedProperties
+        )
+      : properties
+          .map((x, i) => i)
+          .filter(
+            y =>
+              !stringToArray(
+                examples[tmpList[data.indexCurrent].realIndex]
+                  .respectedProperties
+              ).includes(y)
+          );
+  return (
+    <Collapse in={choice === show}>
+      <div>
+        <h4>{titleBis}</h4>
+        <TestListDiv>
+          {array.map((x, i) => (
+            <div className="checkbox" key={x + i.toString()}>
+              <input
+                type="checkbox"
+                checked={
+                  !!tmpList[data.indexCurrent].selectedProperties.includes(x)
+                }
+                onChange={() => {
+                  dataFn.objInsert(
+                    tmpList[data.indexCurrent].selectedProperties.includes(x)
+                      ? tmpList[data.indexCurrent].selectedProperties.filter(
+                          y => y !== x
+                        )
+                      : [...tmpList[data.indexCurrent].selectedProperties, x],
+                    [
+                      feedback
+                        ? 'listIndexTestWithFeedback' + data.indexPart
+                        : 'listIndexTest' + data.indexPart,
+                      data.indexCurrent,
+                      'selectedProperties'
+                    ]
+                  );
+                }}
+              />
+              {properties[x]}
+            </div>
+          ))}
+        </TestListDiv>
+      </div>
+    </Collapse>
+  );
+};

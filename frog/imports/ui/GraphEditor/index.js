@@ -11,7 +11,6 @@ import EditorContainer from './EditorContainer';
 class AppClass extends Component {
   componentWillMount() {
     store.setBrowserHistory(this.props.history);
-    bindKeys();
     this.updateGraphId(this.props.match && this.props.match.params.graphId);
   }
 
@@ -29,6 +28,10 @@ class AppClass extends Component {
     const graphId = assignGraph(graphIdWanted);
     store.setId(graphId);
   };
+
+  componentDidMount() {
+    bindKeys();
+  }
 
   componentWillUnmount() {
     Mousetrap.reset();
@@ -60,6 +63,7 @@ const bindKeys = () => {
   Mousetrap.bind('backspace', store.deleteSelected);
   Mousetrap.bind('?', () => store.ui.setModal(true));
   Mousetrap.bind('s', () => store.operatorStore.place('social'));
+  Mousetrap.bind('+', () => store.activityStore.duplicateActivity());
   Mousetrap.bind('c', () => store.operatorStore.place('control'));
   Mousetrap.bind('p', () => store.operatorStore.place('product'));
   Mousetrap.bind('w', e => {

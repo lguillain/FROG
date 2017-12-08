@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import Latex from 'react-latex';
 import seededShuffle from 'seededshuffle';
 import type { ActivityRunnerT } from 'frog-utils';
+import TextInput from './TextInput';
 
 import LatexWidget from './LatexWidget';
 
@@ -110,6 +111,12 @@ const Quiz = ({
 
 export default (props: ActivityRunnerT) => {
   const { activityData, data } = props;
+  let correct = []
+  if(data.completed) {
+    correct = getCorrect(data.form, activityData.config);
+    console.log(correct)
+  }
+
   return (
     <Main>
       <h1>{activityData.config.title || 'Quiz'}</h1>
@@ -119,7 +126,7 @@ export default (props: ActivityRunnerT) => {
         </Latex>
       </Container>
       <Container>
-        {data.completed ? <h1>Form completed!</h1> : <Quiz {...props} />}
+        {data.completed ? <ShowAnswers correct={correct} questions={activityData.config.questions} /> : <Quiz {...props} />}
       </Container>
     </Main>
   );
@@ -163,7 +170,13 @@ const ShowAnswer = ({correct, q, answer}) => {
       <p>Your answer is {correct ? 'correct': 'incorrect'}</p>
       <p>The correct answer was: {correctAnswer}</p>
       <p>Please retype your answer: </p>
-      {/* Do while incorrect: retype */}
+      <TextInput
+      callbackFn={e => {
+        const id = uuid();
+        dataFn.listAppend({ msg: e, user: userInfo.name, id });
+        logger({ type: 'chat', value: e, itemId: id });
+      }}
+    />
     </div>
   );
 }

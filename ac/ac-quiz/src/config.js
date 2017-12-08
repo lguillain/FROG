@@ -25,6 +25,10 @@ export const config = {
       type: 'boolean',
       title: 'The quiz should be used as an exercise'
     },
+    typeMorse: {
+      type: 'boolean',
+      title: 'Should user type morse when shown correction'
+    },
     hasAnswers: { type: 'boolean', title: 'Provide correct answers' },
     questions: {
       type: 'array',

@@ -151,6 +151,11 @@ const Quiz = ({
 
 export default (props: ActivityRunnerT) => {
   const { activityData, data } = props;
+  let correct = []
+  if(data.completed) {
+    correct = getCorrect(data.form, activityData.config);
+    console.log(correct)
+  }
   return (
     <Main>
       <h1>{activityData.config.title || 'Quiz'}</h1>
@@ -160,7 +165,14 @@ export default (props: ActivityRunnerT) => {
         </Latex>
       </Container>
       <Container>
-        {data.completed ? <h1>Form completed!</h1> : <Quiz {...props} />}
+        {data.completed ?
+          acitivityData.config.exercise?
+          <ShowAnswers correct={correct} questions={activityData.config.questions} />
+          :
+           <h1>Form completed!</h1> 
+           :
+            <Quiz {...props} />
+        }
       </Container>
     </Main>
   );
@@ -180,13 +192,10 @@ function getCorrect(form, configData){
       correctQs[num] = {correct : !!response.isCorrect, answer: response.choice};
     }
   });
-  console.log(correctQs)
   return correctQs
 }
 
 const ShowAnswers = ({correct, questions}) => {
-  //console.log(correct)
-  console.log(questions)
   return(
    <div>
      {correct.map( (x, i) => <ShowAnswer correct={x.correct} q={questions[i]} answer={x.answer} key={i}/>)}
@@ -202,9 +211,7 @@ const ShowAnswer = ({correct, q, answer}) => {
       <h4>{q.question}</h4>
       <p>You answered : {answer}</p>
       <p>Your answer is {correct ? 'correct': 'incorrect'}</p>
-      <p>The correct answer was: {correctAnswer}</p>
-      <p>Please retype your answer: </p>
-      {/* Do while incorrect: retype */}
+      <p>The correct answer was: \n{correctAnswer}</p>
     </div>
   );
 }

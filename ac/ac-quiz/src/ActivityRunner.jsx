@@ -127,7 +127,7 @@ export default (props: ActivityRunnerT) => {
       </Container>
       <Container>
         {data.completed ? 
-        !data.exercise? <ShowAnswers correct={correct} questions={activityData.config.questions} /> : <h1>Form completed!</h1> 
+        !activityData.config.exercise? <ShowAnswers correct={correct} questions={activityData.config.questions} /> : <h1>Form completed!</h1> 
         : 
         <Quiz {...props} />}
       </Container>

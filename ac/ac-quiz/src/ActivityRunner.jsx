@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import Latex from 'react-latex';
 import seededShuffle from 'seededshuffle';
 import type { ActivityRunnerT } from 'frog-utils';
+import TextInput from './TextInput';
 
 import LatexWidget from './LatexWidget';
 
@@ -172,6 +173,14 @@ const ShowAnswer = ({correct, q, answer}) => {
       <p>Your answer is {correct ? 'correct': 'incorrect'}</p>
       <p>The correct answer was: {correctAnswer}</p>
       <p>Please retype your answer: </p>
+        <TextInput
+        correct={correctAnswer}
+        callbackFn={e => {
+          const id = uuid();
+          dataFn.listAppend({ msg: e, user: userInfo.name, id });
+          logger({ type: 'chat', value: e, itemId: id });
+        }}
+      />
       {/* Do while incorrect: retype */}
     </div>
   );

@@ -21,6 +21,10 @@ export const config = {
       type: 'boolean',
       title: 'Students must justify their responses'
     },
+    exercise: {
+      type: 'boolean',
+      title: 'The quiz should be used as an exercise'
+    },
     hasAnswers: { type: 'boolean', title: 'Provide correct answers' },
     questions: {
       type: 'array',

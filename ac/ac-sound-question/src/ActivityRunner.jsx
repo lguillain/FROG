@@ -165,3 +165,50 @@ export default (props: ActivityRunnerT) => {
     </Main>
   );
 };
+
+
+function getCorrect(form, configData){
+  const correctQs = [];
+
+  Object.keys(form).forEach(q => {
+    const num = getNum(q);
+    console.log(num)
+    const answers = [];
+    const response = configData.questions[num].answers[form[q]];
+    answers[num] = response.choice;
+    if (configData.hasAnswers) {
+      correctQs[num] = {correct : !!response.isCorrect, answer: response.choice};
+    }
+  });
+  console.log(correctQs)
+  return correctQs
+}
+
+const ShowAnswers = ({correct, questions}) => {
+  //console.log(correct)
+  console.log(questions)
+  return(
+   <div>
+     {correct.map( (x, i) => <ShowAnswer correct={x.correct} q={questions[i]} answer={x.answer} key={i}/>)}
+  </div> 
+  );
+}
+
+const ShowAnswer = ({correct, q, answer}) => {
+  console.log(q);
+  const correctAnswer = getAnswer(q.answers);
+  return(
+    <div>
+      <h4>{q.question}</h4>
+      <p>You answered : {answer}</p>
+      <p>Your answer is {correct ? 'correct': 'incorrect'}</p>
+      <p>The correct answer was: {correctAnswer}</p>
+      <p>Please retype your answer: </p>
+      {/* Do while incorrect: retype */}
+    </div>
+  );
+}
+
+const getNum = x => parseInt(x.split(' ').pop(), 10);
+
+const getAnswer = x => x.filter( answer => answer.isCorrect)[0].choice

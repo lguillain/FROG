@@ -34,6 +34,7 @@ MorseNode.prototype.connect = function(target) {
 }
 
 MorseNode.prototype.playSound = function (t) {
+    console.log(this._t)
     var now = t;
     
     // Ramp up the gain so we can hear the sound.
@@ -47,6 +48,7 @@ MorseNode.prototype.playSound = function (t) {
 }
 
 MorseNode.prototype.stopPlaying = function(t) {
+    console.log(this._t)
     var now = t;
     this._gain.gain.cancelScheduledValues(now);
     this._gain.gain.setValueAtTime(this._gain.gain.value, now);

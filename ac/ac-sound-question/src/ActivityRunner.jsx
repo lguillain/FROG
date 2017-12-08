@@ -59,12 +59,14 @@ class Sound extends Component{
   initAudio() {
     this.context = new window.AudioContext()
     this.m = new MorseNode(this.context, 2)
+    console.log(this.context.destination)
     this.m.connect(this.context.destination)
   }
 
 
   playAudio(c) {
     this.initAudio()
+    console.log(this.props)
     this.m.playString(this.context.currentTime,c)
     setTimeout(x => this.context.close(), 20000)
   }

@@ -7,6 +7,7 @@ import Latex from 'react-latex';
 import seededShuffle from 'seededshuffle';
 import type { ActivityRunnerT } from 'frog-utils';
 import MorseNode from './morse.js'
+import Sound from './Sound.js'
 
 import LatexWidget from './LatexWidget';
 
@@ -47,36 +48,6 @@ function extractSound(question) {
   let q = question.substr(0, question.indexOf('?') + 1);
   let a = question.substr(question.indexOf('?') + 1);
   return [q, a]
-}
-
-
-class Sound extends Component {
-  constructor(props) {
-    super(props);
-    this.playAudio = this.playAudio.bind(this);
-    this.initAudio = this.initAudio.bind(this);
-  }
-
-  initAudio() {
-    this.context = new window.AudioContext()
-    this.m = new MorseNode(this.context, 2)
-    console.log(this.context.destination)
-    this.m.connect(this.context.destination)
-  }
-
-
-  playAudio(c) {
-    this.initAudio()
-    console.log(this.props)
-    this.m.playString(this.context.currentTime, c)
-    setTimeout(x => this.context.close(), 20000)
-  }
-
-  render() {
-    return (
-      <p onClick={x => this.playAudio(this.props.sound)}>🔊</p>
-    );
-  }
 }
 
 const Quiz = ({
@@ -204,11 +175,12 @@ const ShowAnswers = ({ correct, questions }) => {
 }
 
 const ShowAnswer = ({ correct, q, answer, index }) => {
-  console.log(q);
+  let split = extractSound(q.question)
   const correctAnswer = getAnswer(q.answers);
   return (
     <div>
-      <p style={{ fontWeight: 'bold' }} >{index + 1}. {q.question}</p>
+      <p style={{ fontWeight: 'bold' }} >{index + 1}. {split[0]}</p>
+      <Sound answer={split[1]} />
       <p>You answered : {answer}</p>
       {
         correct ?

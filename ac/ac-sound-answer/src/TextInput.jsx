@@ -30,15 +30,15 @@ class TextInput extends Component {
 
 
   playAudio(c) {
-    console.log(c)
     this.initAudio()
     this.m.playChar(this.context.currentTime,c)
+    let temp= this.context
+    setTimeout(_ => temp.close(), 7500)
   }
 
   create(){
     this.baseChar = '.'
     setTimeout( x => {this.baseChar = '-'}, 500)
-    console.log(this)
   };
   
   update(){
@@ -46,7 +46,6 @@ class TextInput extends Component {
       char: this.state.char+this.baseChar,
       value: this.state.value
     });
-    console.log(this.state.char)
   };
   
   reset(){
@@ -57,7 +56,7 @@ class TextInput extends Component {
   };
 
   startAudio(){
-    console.log(this)
+    this.initAudio()
     this.m.playSound(this.context.currentTime)
     this.create()
   }
@@ -69,7 +68,6 @@ class TextInput extends Component {
   }
 
   onKeyPress = (e: Object) => {
-    console.log('was engaged')
     if (e.key === 'Enter') {
       this.props.callbackFn(e.target.value);
       this.setState({ value: '' , char: this.state.char});
@@ -79,7 +77,6 @@ class TextInput extends Component {
 
 
   handleChange = (e: { target: { value: string } }) => {
-    console.log(this.state)
     this.setState({ value: e.target.value });
   };
 
@@ -98,7 +95,7 @@ class TextInput extends Component {
           this.props.callbackFn(this.state.char);
           this.setState({ value: '' , char: ''});
         }
-      }>send</button>
+      }>correct</button>
       </div>
     );
   }

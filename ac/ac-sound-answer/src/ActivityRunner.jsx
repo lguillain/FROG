@@ -7,6 +7,7 @@ import Latex from 'react-latex';
 import seededShuffle from 'seededshuffle';
 import type { ActivityRunnerT } from 'frog-utils';
 import TextInput from './TextInput';
+import Sound from './Sound.js'
 
 import LatexWidget from './LatexWidget';
 
@@ -150,8 +151,6 @@ function getCorrect(form, configData){
 }
 
 const ShowAnswers = ({correct, questions}) => {
-  //console.log(correct)
-  console.log(questions)
   return(
    <div>
      {correct.map( (x, i) => <ShowAnswer index ={i} correct={x.correct} q={questions[i]} answer={x.answer} key={i}/>)}
@@ -164,14 +163,14 @@ const ShowAnswer = ({correct, q, answer, index}) => {
   return(
     <div>
       <p style={{fontWeight: 'bold'}} >{index+1}. {q.question}</p>
-      <p>You answered : {answer}</p>
+      <p>You answered : </p><Sound answer={answer}/>
       {
       correct ? 
       <p>Your answer was : <span style={{color:'green'}}>correct</span></p>
       : 
       <div>
       <p>Your answer is : <span style={{color:'red'}}>incorrect</span></p>
-      <p>The correct answer was: {correctAnswer}</p>
+      <p>The correct answer was: </p><Sound answer={correctAnswer}/>
       <TextInput
       callbackFn={e => {
         const id = uuid();

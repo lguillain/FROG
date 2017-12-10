@@ -33,11 +33,19 @@ const QuestionTitle = styled.div`
   padding-top: 10px;
 `;
 
-const DescriptionField = props => (
+const DescriptionField = props => {
+  let prettyPrint = beautify(props.description);
+  return(
   <QuestionTitle>
-    <Latex>{props.description}</Latex>
+    <Latex>{prettyPrint}</Latex>
   </QuestionTitle>
-);
+  );
+}
+
+function beautify(question){
+  let temp = question.replace(/\./g, '•').replace(/-/g, '—');
+  return temp
+}
 
 const Quiz = ({
   activityData,
@@ -127,7 +135,7 @@ export default (props: ActivityRunnerT) => {
       </Container>
       <Container>
         {data.completed ? 
-        !activityData.config.exercise? <ShowAnswers correct={correct} questions={activityData.config.questions} /> : <h1>Form completed!</h1> 
+  activityData.config.exercise? <ShowAnswers correct={correct} questions={activityData.config.questions} typeMorse={activityData.config.typeMorse}/> : <h1>Form completed!</h1> 
         : 
         <Quiz {...props} />}
       </Container>
@@ -153,35 +161,46 @@ function getCorrect(form, configData){
   return correctQs
 }
 
-const ShowAnswers = ({correct, questions}) => {
-  //console.log(correct)
-  console.log(questions)
+const ShowAnswers = ({correct, questions, typeMorse}) => {
   return(
    <div>
-     {correct.map( (x, i) => <ShowAnswer correct={x.correct} q={questions[i]} answer={x.answer} key={i}/>)}
+     {correct.map( (x, i) => <ShowAnswer correct={x.correct} index={i} q={questions[i]} answer={x.answer} key={i} typeMorse={typeMorse}/>)}
+     <p>The next actvity will start soon :D</p>
   </div> 
   );
 }
 
-const ShowAnswer = ({correct, q, answer}) => {
-  console.log(q);
+const ShowAnswer = ({correct, q, answer, index, typeMorse}) => {
   const correctAnswer = getAnswer(q.answers);
   return(
     <div>
-      <h4>{q.question}</h4>
-      <p>You answered : {answer}</p>
-      <p>Your answer is {correct ? 'correct': 'incorrect'}</p>
-      <p>The correct answer was: {correctAnswer}</p>
-      <p>Please retype your answer: </p>
-        <TextInput
-        correct={correctAnswer}
-        callbackFn={e => {
-          const id = uuid();
-          dataFn.listAppend({ msg: e, user: userInfo.name, id });
-          logger({ type: 'chat', value: e, itemId: id });
-        }}
-      />
-      {/* Do while incorrect: retype */}
+      <p style={{fontWeight: 'bold'}} >{index+1}. {q.question}</p>
+      <p>You answered : {beautify(answer)}</p>
+      {correct ? 
+      <p>Your answer was : <span style={{color:'green'}}>correct</span></p>
+      : 
+      <div>
+      <p>Your answer is : <span style={{color:'red'}}>incorrect</span></p>
+      <p>The correct answer was: {beautify(correctAnswer)}</p>
+      {typeMorse?
+        <div>
+          <p>Please retype your answer: </p>
+          <TextInput
+            correct={beautify(correctAnswer)}
+            callbackFn={e => {
+              const id = uuid();
+              dataFn.listAppend({ msg: e, user: userInfo.name, id });
+              logger({ type: 'chat', value: e, itemId: id });
+            }
+          }
+          />
+        </div>
+        : 
+        <p></p>
+    }
+      </div>
+      }
+    <br/>
     </div>
   );
 }

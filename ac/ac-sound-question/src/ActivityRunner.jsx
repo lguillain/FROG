@@ -1,6 +1,6 @@
 // @flow
 
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import Form from 'react-jsonschema-form';
 import styled from 'styled-components';
 import Latex from 'react-latex';
@@ -35,26 +35,26 @@ const QuestionTitle = styled.div`
 
 const DescriptionField = props => {
   let split = extractSound(props.description);
-  return(
-  <QuestionTitle>
-    <Latex>{split[0]}</Latex>
-    <Sound sound={split[1]}/>
-  </QuestionTitle>
+  return (
+    <QuestionTitle>
+      <Latex>{split[0]}</Latex>
+      <Sound sound={split[1]} />
+    </QuestionTitle>
   );
 }
 
-function extractSound(question){
-  let q = question.substr(0, question.indexOf('?')+1); 
-  let a = question.substr(question.indexOf('?')+1);
+function extractSound(question) {
+  let q = question.substr(0, question.indexOf('?') + 1);
+  let a = question.substr(question.indexOf('?') + 1);
   return [q, a]
 }
 
 
-class Sound extends Component{
-  constructor(props){
+class Sound extends Component {
+  constructor(props) {
     super(props);
-    this.playAudio=this.playAudio.bind(this);
-    this.initAudio=this.initAudio.bind(this);
+    this.playAudio = this.playAudio.bind(this);
+    this.initAudio = this.initAudio.bind(this);
   }
 
   initAudio() {
@@ -68,12 +68,12 @@ class Sound extends Component{
   playAudio(c) {
     this.initAudio()
     console.log(this.props)
-    this.m.playString(this.context.currentTime,c)
+    this.m.playString(this.context.currentTime, c)
     setTimeout(x => this.context.close(), 20000)
   }
 
-  render(){
-    return(
+  render() {
+    return (
       <p onClick={x => this.playAudio(this.props.sound)}>🔊</p>
     );
   }
@@ -152,7 +152,7 @@ const Quiz = ({
 export default (props: ActivityRunnerT) => {
   const { activityData, data } = props;
   let correct = []
-  if(data.completed) {
+  if (data.completed) {
     correct = getCorrect(data.form, activityData.config);
     console.log(correct)
   }
@@ -166,12 +166,12 @@ export default (props: ActivityRunnerT) => {
       </Container>
       <Container>
         {data.completed ?
-          acitivityData.config.exercise?
-          <ShowAnswers correct={correct} questions={activityData.config.questions} />
+          activityData.config.exercise ?
+            <ShowAnswers correct={correct} questions={activityData.config.questions} />
+            :
+            <h1>Form completed!</h1>
           :
-           <h1>Form completed!</h1> 
-           :
-            <Quiz {...props} />
+          <Quiz {...props} />
         }
       </Container>
     </Main>
@@ -179,7 +179,7 @@ export default (props: ActivityRunnerT) => {
 };
 
 
-function getCorrect(form, configData){
+function getCorrect(form, configData) {
   const correctQs = [];
 
   Object.keys(form).forEach(q => {
@@ -189,33 +189,40 @@ function getCorrect(form, configData){
     const response = configData.questions[num].answers[form[q]];
     answers[num] = response.choice;
     if (configData.hasAnswers) {
-      correctQs[num] = {correct : !!response.isCorrect, answer: response.choice};
+      correctQs[num] = { correct: !!response.isCorrect, answer: response.choice };
     }
   });
   return correctQs
 }
 
-const ShowAnswers = ({correct, questions}) => {
-  return(
-   <div>
-     {correct.map( (x, i) => <ShowAnswer correct={x.correct} q={questions[i]} answer={x.answer} key={i}/>)}
-  </div> 
+const ShowAnswers = ({ correct, questions }) => {
+  return (
+    <div>
+      {correct.map((x, i) => <ShowAnswer index={i} correct={x.correct} q={questions[i]} answer={x.answer} key={i} />)}
+    </div>
   );
 }
 
-const ShowAnswer = ({correct, q, answer}) => {
+const ShowAnswer = ({ correct, q, answer, index }) => {
   console.log(q);
   const correctAnswer = getAnswer(q.answers);
-  return(
+  return (
     <div>
-      <h4>{q.question}</h4>
+      <p style={{ fontWeight: 'bold' }} >{index + 1}. {q.question}</p>
       <p>You answered : {answer}</p>
-      <p>Your answer is {correct ? 'correct': 'incorrect'}</p>
-      <p>The correct answer was: \n{correctAnswer}</p>
+      {
+        correct ?
+          <p>Your answer was : <span style={{ color: 'green' }}>correct</span></p>
+          :
+          <div>
+            <p>Your answer is : <span style={{ color: 'red' }}>incorrect</span></p>
+            <p>The correct answer was: {correctAnswer}</p>
+          </div>
+      }
     </div>
   );
 }
 
 const getNum = x => parseInt(x.split(' ').pop(), 10);
 
-const getAnswer = x => x.filter( answer => answer.isCorrect)[0].choice
+const getAnswer = x => x.filter(answer => answer.isCorrect)[0].choice

@@ -3,6 +3,11 @@
 import React from 'react';
 import Latex from 'react-latex';
 
+function beautify(question){
+  let temp = question.replace(/\./g, '•').replace(/-/g, '—');
+  return temp
+}
+
 export default (props: Object) => {
   const { options, value, required, disabled, readonly, onChange } = props;
   // Generating a unique field name to identify this set of radio buttons
@@ -23,7 +28,7 @@ export default (props: Object) => {
               disabled={disabled || readonly}
               onChange={() => onChange(option.value)}
             />
-            <Latex>{option.label}</Latex>
+            <Latex>{beautify(option.label)}</Latex>
           </span>
         );
 

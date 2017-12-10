@@ -31,6 +31,7 @@ class TextInput extends Component {
 
   playAudio(c) {
     console.log(c)
+    this.initAudio()
     this.m.playChar(this.context.currentTime,c)
   }
 
@@ -83,7 +84,7 @@ class TextInput extends Component {
   };
 
   render() {
-    this.initAudio()
+    
     return (
       <div onChange={this.handleChange}>
         <p onClick={x => this.playAudio(this.state.char)}>click play what you wrote: {this.state.char != '' ? '🔊' : ''}</p>

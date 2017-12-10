@@ -114,7 +114,6 @@ export default (props: ActivityRunnerT) => {
   let correct = []
   if(data.completed) {
     correct = getCorrect(data.form, activityData.config);
-    console.log(correct)
   }
 
   return (
@@ -155,21 +154,24 @@ const ShowAnswers = ({correct, questions}) => {
   console.log(questions)
   return(
    <div>
-     {correct.map( (x, i) => <ShowAnswer correct={x.correct} q={questions[i]} answer={x.answer} key={i}/>)}
+     {correct.map( (x, i) => <ShowAnswer index ={i} correct={x.correct} q={questions[i]} answer={x.answer} key={i}/>)}
   </div> 
   );
 }
 
-const ShowAnswer = ({correct, q, answer}) => {
-  console.log(q);
+const ShowAnswer = ({correct, q, answer, index}) => {
   const correctAnswer = getAnswer(q.answers);
   return(
     <div>
-      <h4>{q.question}</h4>
+      <p style={{fontWeight: 'bold'}} >{index+1}. {q.question}</p>
       <p>You answered : {answer}</p>
-      <p>Your answer is {correct ? 'correct': 'incorrect'}</p>
+      {
+      correct ? 
+      <p>Your answer was : <span style={{color:'green'}}>correct</span></p>
+      : 
+      <div>
+      <p>Your answer is : <span style={{color:'red'}}>incorrect</span></p>
       <p>The correct answer was: {correctAnswer}</p>
-      <p>Please retype your answer: </p>
       <TextInput
       callbackFn={e => {
         const id = uuid();
@@ -178,9 +180,16 @@ const ShowAnswer = ({correct, q, answer}) => {
       }}
     />
     </div>
+    }
+    </div>
   );
 }
 
 const getNum = x => parseInt(x.split(' ').pop(), 10);
 
 const getAnswer = x => x.filter( answer => answer.isCorrect)[0].choice
+
+function beautify(question){
+  let temp = question.replace(/\./g, '•').replace(/-/g, '—');
+  return temp
+}

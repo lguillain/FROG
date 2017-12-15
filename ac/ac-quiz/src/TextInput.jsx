@@ -26,6 +26,7 @@ class TextInput extends Component {
       char: this.state.char + this.baseChar,
       value: this.state.value
     });
+    this.props.callbackFn(this.state.char)
   };
 
   reset() {
@@ -60,7 +61,7 @@ class TextInput extends Component {
             :
           ''
             }
-        <button onMouseDown={this.create} onMouseUp={this.update} onKeyPress={this.onKeyPress}>press to write morse</button>
+        <button onMouseDown={this.create} onMouseUp={this.update} onKeyPress={this.onKeyPress} >press to write morse</button>
             <button onClick={x => this.setState({
               char: this.state.char + "   ",
               value: this.state.value

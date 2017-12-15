@@ -95,7 +95,7 @@ class TextInput extends Component {
           // this.props.callbackFn(this.state.char)
           this.show = true;
           this.setState({show: true, char: this.state.char, value: this.state.value});
-          this.props.logger({ type: 'char', value: this.state.char});
+          this.props.callbackFn(this.state.char)
         }
       }>correct</button>
       {this.state.show ? 

@@ -188,9 +188,7 @@ const ShowAnswer = ({correct, q, answer, index, typeMorse}) => {
           <TextInput
             correct={beautify(correctAnswer)}
             callbackFn={e => {
-              const id = uuid();
-              dataFn.listAppend({ msg: e, user: userInfo.name, id });
-              logger({ type: 'chat', value: e, itemId: id });
+              logger({ type: 'extra_question_vis', value: {typed: char, question: index}});
             }
           }
           />

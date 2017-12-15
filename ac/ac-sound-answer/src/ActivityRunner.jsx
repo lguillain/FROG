@@ -171,11 +171,10 @@ const ShowAnswer = ({correct, q, answer, index, logger}) => {
       <p>Your answer is : <span style={{color:'red'}}>incorrect</span></p>
       <p>The correct answer was: </p><Sound answer={correctAnswer}/>
       <TextInput
-      logger={logger}
       correct={correctAnswer}
-      // callbackFn={char => {
-      //   logger({ type: 'char', value: char});
-      // }}
+      callbackFn={char => {
+        logger({ type: 'extra_question_audio', value: {typed: char, question: index}});
+      }}
     />
     </div>
     }

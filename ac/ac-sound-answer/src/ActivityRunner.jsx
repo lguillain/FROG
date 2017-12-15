@@ -126,7 +126,7 @@ export default (props: ActivityRunnerT) => {
         </Latex>
       </Container>
       <Container>
-        {data.completed ? <ShowAnswers correct={correct} questions={activityData.config.questions} /> : <Quiz {...props} />}
+        {data.completed ? <ShowAnswers logger={props.logger} correct={correct} questions={activityData.config.questions} /> : <Quiz {...props} />}
       </Container>
     </Main>
   );
@@ -146,19 +146,18 @@ function getCorrect(form, configData){
       correctQs[num] = {correct : !!response.isCorrect, answer: response.choice};
     }
   });
-  console.log(correctQs)
   return correctQs
 }
 
-const ShowAnswers = ({correct, questions}) => {
+const ShowAnswers = ({correct, questions, logger}) => {
   return(
    <div>
-     {correct.map( (x, i) => <ShowAnswer index ={i} correct={x.correct} q={questions[i]} answer={x.answer} key={i}/>)}
+     {correct.map( (x, i) => <ShowAnswer index ={i} logger={logger} correct={x.correct} q={questions[i]} answer={x.answer} key={i}/>)}
   </div> 
   );
 }
 
-const ShowAnswer = ({correct, q, answer, index}) => {
+const ShowAnswer = ({correct, q, answer, index, logger}) => {
   const correctAnswer = getAnswer(q.answers);
   return(
     <div>
@@ -172,11 +171,11 @@ const ShowAnswer = ({correct, q, answer, index}) => {
       <p>Your answer is : <span style={{color:'red'}}>incorrect</span></p>
       <p>The correct answer was: </p><Sound answer={correctAnswer}/>
       <TextInput
-      callbackFn={e => {
-        const id = uuid();
-        dataFn.listAppend({ msg: e, user: userInfo.name, id });
-        logger({ type: 'chat', value: e, itemId: id });
-      }}
+      logger={logger}
+      correct={correctAnswer}
+      // callbackFn={char => {
+      //   logger({ type: 'char', value: char});
+      // }}
     />
     </div>
     }

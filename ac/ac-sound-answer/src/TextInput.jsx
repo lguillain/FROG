@@ -6,7 +6,7 @@ import MorseNode from './morse.js'
 class TextInput extends Component {
   state: { value: string , char: string};
 
-  constructor(props: { callbackFn: Function }) {
+  constructor(props) {
     super(props);
     this.create=this.create.bind(this);
     this.update=this.update.bind(this);
@@ -53,6 +53,7 @@ class TextInput extends Component {
       char: "",
       value: this.state.value
     });
+    this.setState({show: false, char: this.state.char, value: this.state.value});
   };
 
   startAudio(){
@@ -81,7 +82,6 @@ class TextInput extends Component {
   };
 
   render() {
-    
     return (
       <div onChange={this.handleChange}>
         <p onClick={x => this.playAudio(this.state.char)}>click play what you wrote: {this.state.char != '' ? '🔊' : ''}</p>
@@ -92,15 +92,54 @@ class TextInput extends Component {
         })}>add space</button>
         <button onClick={this.reset}>reset</button>
         <button onClick={x => {
-          this.props.callbackFn(this.state.char);
-          this.setState({ value: '' , char: ''});
+          // this.props.callbackFn(this.state.char)
+          this.show = true;
+          this.setState({show: true, char: this.state.char, value: this.state.value});
+          this.props.logger({ type: 'char', value: this.state.char});
         }
       }>correct</button>
+      {this.state.show ? 
+        (this.state.char == toChar(this.props.correct))? <p style={{color:'green'}}>correct!</p> : 
+        <p style={{color:'red'}}>try again</p>
+        : ''}
       </div>
     );
   }
 };
 
+function toChar(w){
+  const MORSE = {
+    "A": ".-",
+    "B": "-...",
+    "C": "-.-.",
+    "D": "-..",
+    "E": ".",
+    "F": "..-.",
+    "G": "--.",
+    "H": "....",
+    "I": "..",
+    "J": ".---",
+    "K": "-.-",
+    "L": ".-..",
+    "M": "--",
+    "N": "-.",
+    "O": "---",
+    "P": ".--.",
+    "Q": "--.-",
+    "R": ".-.",
+    "S": "...",
+    "T": "-",
+    "U": "..-",
+    "W": ".--",
+    "X": "-..-",
+    "Y": "-.--",
+    "Z": "--.."
+  }
 
+  let morse = '';
+  for(var i = 0; i < w.length; i++)
+    morse += MORSE[w[i]];
+  return morse
+}
 
 export default TextInput;

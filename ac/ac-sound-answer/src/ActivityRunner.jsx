@@ -126,7 +126,11 @@ export default (props: ActivityRunnerT) => {
         </Latex>
       </Container>
       <Container>
-        {data.completed ? <ShowAnswers logger={props.logger} correct={correct} questions={activityData.config.questions} /> : <Quiz {...props} />}
+        {data.completed ? 
+        activityData.config.exercise?
+        <ShowAnswers logger={props.logger} correct={correct} questions={activityData.config.questions} />: <h1>Form completed!</h1> 
+         :
+         <Quiz {...props} />}
       </Container>
     </Main>
   );

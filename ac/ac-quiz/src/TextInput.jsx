@@ -22,11 +22,12 @@ class TextInput extends Component {
   };
 
   update() {
+    console.log(this.props, this.state)
     this.setState({
       char: this.state.char + this.baseChar,
       value: this.state.value
     });
-    this.props.callbackFn(this.state.char)
+    this.props.callbackFn(this.state.char + this.baseChar)
   };
 
   reset() {
@@ -36,22 +37,12 @@ class TextInput extends Component {
     });
   };
 
-  onKeyPress = (e: Object) => {
-    if (e.key === 'Enter') {
-      this.props.callbackFn(e.target.value);
-      this.setState({ value: '', char: this.state.char });
-      e.preventDefault();
-    }
-  };
-
 
   handleChange = (e: { target: { value: string } }) => {
     this.setState({ value: e.target.value });
   };
 
   render() {
-    console.log(this.state.char + '  ' + this.props.correct)
-    console.log(this.state.char.length + '  ' + this.props.correct.length)
     return (
       <div onChange={this.handleChange}>
         {this.state.char.length > 0 ?
@@ -61,7 +52,7 @@ class TextInput extends Component {
             :
           ''
             }
-        <button onMouseDown={this.create} onMouseUp={this.update} onKeyPress={this.onKeyPress} >press to write morse</button>
+        <button onMouseDown={this.create} onMouseUp={this.update} >press to write morse</button>
             <button onClick={x => this.setState({
               char: this.state.char + "   ",
               value: this.state.value

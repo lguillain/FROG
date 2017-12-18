@@ -135,7 +135,7 @@ export default (props: ActivityRunnerT) => {
       </Container>
       <Container>
         {data.completed ? 
-  activityData.config.exercise? <ShowAnswers correct={correct} questions={activityData.config.questions} typeMorse={activityData.config.typeMorse}/> : <h1>Form completed!</h1> 
+  activityData.config.exercise? <ShowAnswers logger={props.logger} userInfo={props.userInfo} correct={correct} questions={activityData.config.questions} typeMorse={activityData.config.typeMorse}/> : <h1>Form completed!</h1> 
         : 
         <Quiz {...props} />}
       </Container>
@@ -161,16 +161,16 @@ function getCorrect(form, configData){
   return correctQs
 }
 
-const ShowAnswers = ({correct, questions, typeMorse}) => {
+const ShowAnswers = ({correct, questions, typeMorse, userInfo, logger}) => {
   return(
    <div>
-     {correct.map( (x, i) => <ShowAnswer correct={x.correct} index={i} q={questions[i]} answer={x.answer} key={i} typeMorse={typeMorse}/>)}
+     {correct.map( (x, i) => <ShowAnswer logger={logger} userInfo={userInfo} correct={x.correct} index={i} q={questions[i]} answer={x.answer} key={i} typeMorse={typeMorse}/>)}
      <p>The next actvity will start soon :D</p>
   </div> 
   );
 }
 
-const ShowAnswer = ({correct, q, answer, index, typeMorse}) => {
+const ShowAnswer = ({correct, q, answer, index, typeMorse, userInfo, logger}) => {
   const correctAnswer = getAnswer(q.answers);
   return(
     <div>
@@ -187,8 +187,8 @@ const ShowAnswer = ({correct, q, answer, index, typeMorse}) => {
           <p>Please retype your answer: </p>
           <TextInput
             correct={beautify(correctAnswer)}
-            callbackFn={e => {
-              logger({ type: 'extra_question_vis', value: {typed: char, question: index}});
+            callbackFn={char => {
+              logger({ type: 'extra_question_vis', value: {typed: char, question: q.question, userInfo: userInfo}});
             }
           }
           />

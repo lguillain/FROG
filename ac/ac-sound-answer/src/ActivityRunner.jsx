@@ -116,7 +116,6 @@ export default (props: ActivityRunnerT) => {
   if(data.completed) {
     correct = getCorrect(data.form, activityData.config);
   }
-
   return (
     <Main>
       <h1>{activityData.config.title || 'Quiz'}</h1>
@@ -128,7 +127,7 @@ export default (props: ActivityRunnerT) => {
       <Container>
         {data.completed ? 
         activityData.config.exercise?
-        <ShowAnswers logger={props.logger} correct={correct} questions={activityData.config.questions} />: <h1>Form completed!</h1> 
+        <ShowAnswers logger={props.logger} userInfo={props.userInfo} correct={correct} questions={activityData.config.questions} />: <h1>Form completed!</h1> 
          :
          <Quiz {...props} />}
       </Container>
@@ -153,15 +152,15 @@ function getCorrect(form, configData){
   return correctQs
 }
 
-const ShowAnswers = ({correct, questions, logger}) => {
+const ShowAnswers = ({correct, questions, logger, userInfo}) => {
   return(
    <div>
-     {correct.map( (x, i) => <ShowAnswer index ={i} logger={logger} correct={x.correct} q={questions[i]} answer={x.answer} key={i}/>)}
+     {correct.map( (x, i) => <ShowAnswer index ={i} logger={logger}  userInfo={userInfo} correct={x.correct} q={questions[i]} answer={x.answer} key={i}/>)}
   </div> 
   );
 }
 
-const ShowAnswer = ({correct, q, answer, index, logger}) => {
+const ShowAnswer = ({correct, q, answer, index, logger, userInfo}) => {
   const correctAnswer = getAnswer(q.answers);
   return(
     <div>
@@ -177,7 +176,7 @@ const ShowAnswer = ({correct, q, answer, index, logger}) => {
       <TextInput
       correct={correctAnswer}
       callbackFn={char => {
-        logger({ type: 'extra_question_audio', value: {typed: char, question: index}});
+        logger({ type: 'extra_question_audio', value: {typed: char, question: q.question, userInfo: userInfo}});
       }}
     />
     </div>

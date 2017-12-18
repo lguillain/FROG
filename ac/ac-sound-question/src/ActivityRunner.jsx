@@ -39,7 +39,7 @@ const DescriptionField = props => {
   return (
     <QuestionTitle>
       <Latex>{split[0]}</Latex>
-      <Sound sound={split[1]} />
+      <Sound answer={split[1]} />
     </QuestionTitle>
   );
 }

@@ -26,7 +26,6 @@ export const createLogger = (
 ) => {
   const logger = (logItem: LogT) => {
     const log = ({
-      _id: uuid(),
       userId: Meteor.userId(),
       sessionId,
       activityType: activity.activityType,

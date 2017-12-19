@@ -62,7 +62,6 @@ export default ({
   config,
   configUI,
   ActivityRunner,
-  dashboard,
   exportData,
   formatProduct
 }: ActivityPackageT);

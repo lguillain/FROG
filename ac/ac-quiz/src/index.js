@@ -11,7 +11,9 @@ import dashboard from './Dashboard';
 const getNum = x => parseInt(x.split(' ').pop(), 10);
 
 const exportData = (configData, { payload }) => {
+  
   const csv = Object.keys(payload).map(line => {
+  
     const data = payload[line].data['form'];
     const res = [];
     if (data) {
@@ -62,6 +64,5 @@ export default ({
   config,
   configUI,
   ActivityRunner,
-  exportData,
   formatProduct
 }: ActivityPackageT);

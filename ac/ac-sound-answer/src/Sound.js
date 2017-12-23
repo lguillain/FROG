@@ -14,10 +14,10 @@ export default class Sound extends Component{
   
     initAudio() {
       this.context = new window.AudioContext();
-      this.m = new MorseNode(this.context, 2)
+      this.m = new MorseNode(this.context, 8)
       this.m.connect(this.context.destination)
       let temp= this.context
-      setTimeout(_ => temp.close(), 7500)
+      setTimeout(_ => temp.close(), 6500)
     }
   
   
